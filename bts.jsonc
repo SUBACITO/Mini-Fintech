@@ -9,8 +9,8 @@
 {
   "$schema": "https://r2.better-t-stack.dev/schema.json",
   "version": "3.43.1",
-  "createdAt": "2026-09-15T03:35:39.920Z",
-  "reproducibleCommand": "bun create better-t-stack@latest . --frontend next --backend express --runtime bun --database postgres --orm drizzle --api none --auth none --payments none --addons turborepo --examples none --db-setup docker --web-deploy docker --server-deploy docker --git --package-manager bun --no-install",
+  "createdAt": "2026-09-15T03:39:44.239Z",
+  "reproducibleCommand": "bun create better-t-stack@latest . --frontend next --backend express --runtime bun --database postgres --orm drizzle --api none --auth none --payments none --addons turborepo --examples none --db-setup none --web-deploy none --server-deploy none --git --package-manager bun --no-install",
   "database": "postgres",
   "orm": "drizzle",
   "backend": "express",
@@ -21,8 +21,8 @@
   "auth": "none",
   "payments": "none",
   "packageManager": "bun",
-  "dbSetup": "docker",
+  "dbSetup": "none",
   "api": "none",
-  "webDeploy": "docker",
-  "serverDeploy": "docker",
+  "webDeploy": "none",
+  "serverDeploy": "none",
 }
