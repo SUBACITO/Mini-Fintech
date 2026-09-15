@@ -1,0 +1,3 @@
+{
+  "extends": "@Mini-Fintech/config/tsconfig.base.json"
+}
