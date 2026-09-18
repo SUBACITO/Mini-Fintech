@@ -6,6 +6,7 @@ import { AuthModule } from '@thallesp/nestjs-better-auth';
 import { DrizzleModule } from './database/drizzle.module.js';
 import { auth } from "./auth.js";
 import { AccountModule } from './account/account.module.js';
+import { TransfersModule } from './transfers/transfers.module.js';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { AccountModule } from './account/account.module.js';
     DrizzleModule,
     AuthModule.forRoot({ auth }),
     AccountModule,
+    TransfersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

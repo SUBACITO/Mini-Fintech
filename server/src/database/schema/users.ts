@@ -14,13 +14,13 @@ export const userStatus = pgEnum('user_status', [
     UserStatus.ACTIVATED,
     UserStatus.SUSPENDED,
     UserStatus.BANNED,
-] as [string, ...string[]]);
+]);
 
 export const users = pgTable('users', {
   id: uuid().defaultRandom().primaryKey(),
   email: varchar({ length: 255 }).notNull().unique(),
   name: varchar({ length: 255 }).notNull(),
-  status: userStatus().notNull().default('pending'),
+  status: userStatus().notNull().default(UserStatus.PENDING),
   emailVerified: boolean().notNull().default(false),
   image: text(),
   createdAt: timestamp().notNull().defaultNow(),
