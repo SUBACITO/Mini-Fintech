@@ -4,3 +4,4 @@ export * from './wallets.js';
 export * from './transfers.js';
 export * from './ledger_transactions.js';
 export * from './ledger_entries.js';
+export * from './idempotency-keys.js';

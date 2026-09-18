@@ -7,12 +7,12 @@ import { AllowAnonymous, Session, type UserSession } from '@thallesp/nestjs-bett
 export class AccountController {
   constructor(private readonly accountService: AccountService) {}
   
-  @Get()
+  @Get('/info')
   @UseGuards(ActivatedUserGuard)
   @AllowAnonymous()
   findAll(@Session() session: UserSession) {
     const userId = session['session'].userId
-    return this.accountService.getData(userId);
+    return this.accountService.getInfoUser(userId);
   }
 
 }

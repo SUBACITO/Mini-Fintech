@@ -12,13 +12,26 @@ export class AccountService {
   }
 
   async getData(userId: string){
+    // const [user] = await this.drizzle
+    //   .select()
+    //   .from(users)
+    //   .where(
+    //     and(
+    //       eq(users.id, userId),
+    //       lt(users.activatedAt, sql`now()`)
+    //     )
+    //   )
+
+    // return user
+  }
+
+  async getInfoUser(userId: string){
     const [user] = await this.drizzle
       .select()
       .from(users)
       .where(
         and(
-          eq(users.id, userId),
-          lt(users.activatedAt, sql`now()`)
+          eq(users.id, userId)
         )
       )
 

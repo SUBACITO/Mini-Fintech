@@ -2,22 +2,30 @@ import { BadRequestException, Inject, Injectable, InternalServerErrorException, 
 import { type Db } from '../database/database.provider.js';
 import { CreateTransferDto } from './dto/create-transfer.dto.js';
 import { wallets } from '../database/schema/wallets.js';
-import { and, eq, inArray, sql, sum } from 'drizzle-orm';
+import { eq, inArray, sql, sum } from 'drizzle-orm';
 import { transfers } from '../database/schema/transfers.js';
 import { ledger_transactions } from '../database/schema/ledger_transactions.js';
 import { ledger_entries } from '../database/schema/ledger_entries.js';
 import { LedgerEntriesType } from '../common/enums/ledger_entries-type.enum.js';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { TransferCompletedEvent } from '../common/events/transfer-completed.event.js';
 
 @Injectable()
 export class TransfersService {
   constructor(
-    @Inject('DRIZZLE') readonly drizzle: Db
+    @Inject('DRIZZLE') readonly drizzle: Db,
+    private readonly eventEmitter: EventEmitter2
   ) { }
 
   async transfer(dto: CreateTransferDto) {
+    // console.log(dto.idempotencyKey)
+    // const existIdempotencyKey = await this.drizzle.select()
+    
+
+
     const amount = BigInt(dto.amount)
 
-    return await this.drizzle.transaction(async (tx) => {
+    const result = await this.drizzle.transaction(async (tx) => {
 
       // Lock cả 2 ví cùng lúc theo UUID order → tránh deadlock
       const [firstId, secondId] = [dto.senderWalletId, dto.receiverWalletId].sort()
@@ -105,5 +113,15 @@ export class TransfersService {
         amount: amount.toString()
       }
     })
+
+     // Emit sau khi transaction commit thành công
+    this.eventEmitter.emit('transfer.completed', {
+      transferId: result.transferId,
+      senderId: dto.senderId,
+      receiverWalletId: dto.receiverWalletId,
+      amount: result.amount
+    } satisfies TransferCompletedEvent)
+
+    return result
   }
 }

@@ -2,6 +2,8 @@
 import { IsUUID, IsPositive } from 'class-validator';
 
 export class CreateTransferDto {
+  @IsUUID()
+  idempotencyKey: string;
 
   @IsUUID()
   senderId: string;
