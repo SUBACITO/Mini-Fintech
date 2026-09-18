@@ -1,58 +1,59 @@
-# Dependencies
-node_modules
-.pnp
-.pnp.js
+# compiled output
+/dist
+/node_modules
+/build
 
-# Build outputs
-dist
-build
+# TypeScript build cache
 *.tsbuildinfo
 
-# Generated files
-apps/web/src/routeTree.gen.ts
-local.db
-local.db-*
+# Logs
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
 
-# Environment variables
-.env
-.env*.local
+# OS
+.DS_Store
+
+# Tests
+/coverage
+/.nyc_output
 
 # IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-.idea
-*.swp
-*.swo
-*~
-.DS_Store
 
-# Logs
-logs
-.evlog/
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-lerna-debug.log*
-.pnpm-debug.log*
+# dotenv environment variable files
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
 
-# Turbo
-.turbo
-.nx
+# temp directory
+.temp
+.tmp
 
-# Better-T-Stack
-.alchemy
-.vercel
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
 
-# Testing
-coverage
-.nyc_output
-
-# Misc
-*.tgz
-.cache
-tmp
-temp
+# Diagnostic reports (https://nodejs.org/api/report.html)
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
