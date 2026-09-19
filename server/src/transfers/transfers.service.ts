@@ -1,14 +1,15 @@
-import { BadRequestException, Inject, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Inject, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { type Db } from '../database/database.provider.js';
 import { CreateTransferDto } from './dto/create-transfer.dto.js';
 import { wallets } from '../database/schema/wallets.js';
-import { eq, inArray, sql, sum } from 'drizzle-orm';
+import { and, eq, gt, inArray, sql, sum } from 'drizzle-orm';
 import { transfers } from '../database/schema/transfers.js';
 import { ledger_transactions } from '../database/schema/ledger_transactions.js';
 import { ledger_entries } from '../database/schema/ledger_entries.js';
 import { LedgerEntriesType } from '../common/enums/ledger_entries-type.enum.js';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { TransferCompletedEvent } from '../common/events/transfer-completed.event.js';
+import { idempotencyKeys } from '../database/schema/idempotency-keys.js';
 
 @Injectable()
 export class TransfersService {
@@ -18,14 +19,23 @@ export class TransfersService {
   ) { }
 
   async transfer(dto: CreateTransferDto) {
-    // console.log(dto.idempotencyKey)
-    // const existIdempotencyKey = await this.drizzle.select()
-    
-
-
     const amount = BigInt(dto.amount)
 
     const result = await this.drizzle.transaction(async (tx) => {
+      const [idempotencyResult] = await tx
+        .insert(idempotencyKeys)
+        .values({
+          key: dto.idempotencyKey,
+          createdAt: sql`now()`,
+          expiredAt: sql`now() + interval '5 seconds'`,
+        })
+        .onConflictDoNothing() // unique constraint trên column `key`
+        .returning()
+
+      // Nếu không insert được → key đã tồn tại (duplicate request)
+      if (!idempotencyResult) {
+        throw new ConflictException('Duplicate request: idempotency key already exists')
+      }
 
       // Lock cả 2 ví cùng lúc theo UUID order → tránh deadlock
       const [firstId, secondId] = [dto.senderWalletId, dto.receiverWalletId].sort()
@@ -114,7 +124,7 @@ export class TransfersService {
       }
     })
 
-     // Emit sau khi transaction commit thành công
+    // Emit sau khi transaction commit thành công
     this.eventEmitter.emit('transfer.completed', {
       transferId: result.transferId,
       senderId: dto.senderId,

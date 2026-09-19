@@ -1,0 +1,1 @@
+ALTER TABLE "idempotency_keys" ADD COLUMN "expired_at" timestamp with time zone NOT NULL;

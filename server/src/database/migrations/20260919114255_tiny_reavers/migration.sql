@@ -1,0 +1,1 @@
+ALTER TABLE "idempotency_keys" ADD CONSTRAINT "idempotency_keys_key_key" UNIQUE("key");
